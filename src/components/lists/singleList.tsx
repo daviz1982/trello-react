@@ -8,6 +8,7 @@ import ListFooter from './ListFooter'
 import { useForm } from 'react-hook-form'
 import sprite from '../../images/sprite.svg'
 import MyModal from '../mymodal/MyModal'
+import TaskList from '../tasks/TaskList'
 
 export default function SingleList({
   id,
@@ -39,10 +40,6 @@ export default function SingleList({
       .catch((e) => {
         // console.error('CONTROLLED ERROR: ', e)
       })
-    getTasksList(listId).then((tasks) => {
-      console.log(tasks)
-      setTasksList(tasks)
-    })
   }, [reloadList])
 
   useEffect(()=>{
@@ -133,13 +130,7 @@ export default function SingleList({
           </div>
         )}
         <div className='card-body list-body'>
-          {tasksList.length > 0 && (
-            <>
-              {tasksList.map((elem: any) => {
-                return <Task key={elem.id} id={elem.id} name={elem.task} />
-              })}
-            </>
-          )}
+          <TaskList listId={listId} />
         </div>
         <div className='card-footer'>
           <ListFooter idList={listId} setTasksList={setTasksList} />

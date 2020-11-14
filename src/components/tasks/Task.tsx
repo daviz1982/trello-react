@@ -3,7 +3,14 @@ import sprite from '../../images/sprite.svg'
 
 export default function Task({ name, id }: { name: string; id: number }) {
 
+  // const [editTaskName, setEditTaskName]
+
+
   const delTask = () => {
+
+  }
+
+  const editTask = () => {
 
   }
 
