@@ -24,7 +24,7 @@ export default function ListFooter({ idList, setTasksList }: any) {
         }
       })
       .catch((e) => {
-        // console.error('Hola soy un error: ', e)
+        // console.error('CONTROLLED ERROR: ', e)
       })
     setNewName('')
   }

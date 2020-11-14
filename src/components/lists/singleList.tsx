@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import deleteList from '../../services/deleteList.service'
 import editList from '../../services/editList.service'
 import getList from '../../services/getList.service'
 import getTasksList from '../../services/getTasks.service'
@@ -8,97 +7,110 @@ import Task from '../tasks/Task'
 import ListFooter from './ListFooter'
 import { useForm } from 'react-hook-form'
 import sprite from '../../images/sprite.svg'
+import MyModal from '../mymodal/MyModal'
 
-export default function SingleList({ id, name }: { id: number; name: string }) {
+export default function SingleList({
+  id,
+  name,
+  handleDeleteList,
+}: {
+  id: number
+  name: string
+  handleDeleteList: any
+}) {
   const [tasksList, setTasksList] = useState([])
-  const [showEditName, setShowEditName] = useState(false)
   const [error, setError] = useState('')
-  const params = useParams<{ idList: string }>()
-  const { handleSubmit, register } = useForm()
+  const [showEditName, setShowEditName] = useState(false)
+  const [editListName, setEditListName] = useState(name)
+  const [showModal, setShowModal] = useState(false)
+  const [reloadList, setReloadList] = useState(false)
   const [showListOptions, setShowListOptions] = useState(false)
-
-  const [state, setState] = useState(() => {
-    if (params.idList) {
-      return { idList: params.idList, name: '' }
-    } else {
-      return { idList: id, name: name }
-    }
-  })
+  const [listName, setListName] = useState(name)
+  const [listId, setListId] = useState(id)
 
   useEffect(() => {
-    getList(state.idList)
+    setReloadList(false)
+    getList(listId)
       .then((list) => {
         if (list.length) {
-          setState({ ...state, name: list[0].name })
+          setListName(list[0].name)
         }
       })
       .catch((e) => {
-        // console.error('Hola soy un error: ', e)
+        // console.error('CONTROLLED ERROR: ', e)
       })
-    getTasksList(state.idList).then((tasks) => {
+    getTasksList(listId).then((tasks) => {
+      console.log(tasks)
       setTasksList(tasks)
     })
-  }, [])
+  }, [reloadList])
+
+  useEffect(()=>{
+    if (!showEditName) {
+      setEditListName(listName)
+    }
+  }, [showEditName])
 
   const delList = () => {
-    setShowListOptions(false)
-    if (tasksList.length > 0) {
-      setError(`Error on delete! This list has depending tasks`)
-      setTimeout(() => {
-        setError('')
-      }, 2000)
-      return
+    if (!showModal) {
+      setShowListOptions(false)
+      if (tasksList.length > 0) {
+        setError(
+          `This list has depending tasks. Are you sure you want to delete?`
+        )
+        setShowModal(true)
+        return
+      }
     }
-    deleteList(state.idList)
+    handleDeleteList(listId)
+    closeModal()
   }
 
-  const edit = (params: any) => {
+  const edit = () => {
     setShowEditName(false)
     setShowListOptions(false)
-    editList({ idList: state.idList, name: params.name }).then(() => {
-      getList(state.idList)
-        .then((list) => {
-          if (list.length) {
-            setState({ ...state, name: list[0].name })
-          }
-        })
-        .catch((e) => {
-          // console.error('Hola soy un error: ', e)
-        })
+    editList({ idList: listId, name: editListName }).then(() => {
+      setReloadList(true)
     })
+  }
+
+  const closeModal = () => {
+    setShowModal(false)
+    setError('')
   }
 
   return (
     <>
-      {error && (
-        <div
-          id='error-single-list'
-          className='alert alert-danger fade show'
-          role='alert'
-        >
-          {error}
-        </div>
+      {showModal && (
+        <MyModal
+          show={showModal}
+          handleClose={closeModal}
+          handleAction={() => delList()}
+          title='Confirm deletion'
+          bodyText={error}
+          textPrimaryButton='Delete'
+          textSecondaryButton='Cancel'
+        />
       )}
       <div className='tasklist card'>
         <div className='card-header d-flex'>
           {showEditName ? (
-            <form className='form-inline' onSubmit={handleSubmit(edit)}>
+            <form className='form-inline' onSubmit={edit}>
               <input
                 className='form-control'
                 type='text'
-                value={state.name}
-                onChange={(e) => setState({ ...state, name: e.target.value })}
+                value={editListName}
+                onChange={(e) => setEditListName(e.target.value)}
                 name='name'
-                ref={register}
               />
               <button className='btn btn-primary'>Rename</button>
             </form>
           ) : (
-            <h5>{state.name}</h5>
+            <h5>{listName}</h5>
           )}
           <button
             className='btn btn-secondary ml-auto'
-            onClick={() => setShowListOptions(true)}
+            onClick={() => {setShowListOptions(!showListOptions); setShowEditName(false)}}
           >
             <svg className='bi' width='16' height='16'>
               <use href={sprite + '#list'} />
@@ -130,7 +142,7 @@ export default function SingleList({ id, name }: { id: number; name: string }) {
           )}
         </div>
         <div className='card-footer'>
-          <ListFooter idList={state.idList} setTasksList={setTasksList} />
+          <ListFooter idList={listId} setTasksList={setTasksList} />
         </div>
       </div>
     </>

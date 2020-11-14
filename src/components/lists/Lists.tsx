@@ -1,38 +1,39 @@
 import React, { useEffect, useState } from 'react'
-import { Redirect } from 'react-router-dom'
 import getAllLists from '../../services/allLists.service'
 import { useForm } from 'react-hook-form'
 import createList from '../../services/createList.service'
 import SingleList from './singleList'
+import deleteList from '../../services/deleteList.service'
 
 export default function Lists() {
   const [allLists, setAllLists] = useState([])
-  const [idNewList, setIdNewList] = useState()
-  const [redirList, setRedirList] = useState(false)
+  const [reloadList, setReloadList] = useState(false)
   const { handleSubmit, register } = useForm()
 
   useEffect(() => {
+    setReloadList(false)
     getAllLists().then((res) => {
       // TODO: sort lists by id - custom order
       setAllLists(res)
     })
-  }, [])
+  }, [reloadList])
 
   const newList = (params: any) => {
     const { listname } = params
     if (listname === '') return
     createList(listname).then((res) => {
       if (res) {
-        setIdNewList(res.id)
-        setRedirList(true)
+        setReloadList(true)
       }
     })
   }
 
+  const delList = (id: string) => {
+    deleteList(id).then(() => setReloadList(true))
+  }
+
   return (
     <>
-      {redirList && <Redirect to={`/list/${idNewList}`} />}
-
       <main>
         <h2>Your lists</h2>
 
@@ -43,7 +44,14 @@ export default function Lists() {
             </div>
           )}
           {allLists.length > 0 &&
-            allLists.map((el: any) => <SingleList key={el.id} id={el.id} name={el.name} />)}
+            allLists.map((el: any) => (
+              <SingleList
+                key={el.id}
+                id={el.id}
+                name={el.name}
+                handleDeleteList={() => delList(el.id)}
+              />
+            ))}
         </div>
         <div className='form-new-list'>
           <h4>Add a list</h4>
