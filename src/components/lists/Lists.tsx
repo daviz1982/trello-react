@@ -13,6 +13,7 @@ export default function Lists() {
 
   useEffect(() => {
     getAllLists().then((res) => {
+      // TODO: sort lists by id - custom order
       setAllLists(res)
     })
   }, [])

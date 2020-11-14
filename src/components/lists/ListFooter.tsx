@@ -6,13 +6,15 @@ import getTasksList from '../../services/getTasks.service'
 export default function ListFooter({ idList, setTasksList }: any) {
   const { handleSubmit, register } = useForm()
   const [showFormAddTask, setShowFormAddTask] = useState(false)
+  const [newName, setNewName] = useState('')
   const handleFormAddTask = () => {
     setShowFormAddTask(!showFormAddTask)
   }
-  const newTask = (params: any) => {
-    const { taskname } = params
-    if (taskname === '') return
-    addTask({ task: taskname, idlist: idList })
+  const newTask = () => {
+    setShowFormAddTask(false)
+    if (newName === '') return
+
+    addTask({ task: newName, idlist: idList })
       .then((res) => {
         if (res) {
           // getAllTasks()
@@ -22,8 +24,9 @@ export default function ListFooter({ idList, setTasksList }: any) {
         }
       })
       .catch((e) => {
-        // console.error('Ola soy un error: ', e)
+        // console.error('Hola soy un error: ', e)
       })
+    setNewName('')
   }
 
   return (
@@ -43,6 +46,8 @@ export default function ListFooter({ idList, setTasksList }: any) {
               ref={register}
               maxLength={20}
               placeholder='Name'
+              onChange={(e) => setNewName(e.target.value)}
+              value={newName}
             />
           </div>
           <div className='d-flex'>
