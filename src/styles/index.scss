@@ -1,0 +1,54 @@
+html, body {
+  background-color: #fcfcfc;
+  height: 100%;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  margin: 0;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+#root {
+  background-color: #fefffe;
+  box-shadow: 0 0 20px 0 rgba(0,0,0,.1);
+  height: 100%;
+  margin: 0 auto;
+  padding: 5vh 5vw; 
+  width: 92vw;
+}
+
+.App>header {
+  border-bottom: 1px solid #ececec;
+  height: 10vh;
+  nav {
+    align-self: center;
+    text-align: right;
+  }
+}
+
+.App-content {
+  height: 80vh;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  h2 {
+    flex: 0 0 auto;
+    margin: 1rem 0;
+  }
+}
+
+@import 'login';
+@import 'list';
+@import 'tasks';
