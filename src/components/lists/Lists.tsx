@@ -9,7 +9,7 @@ export default function Lists() {
   const [allLists, setAllLists] = useState([])
   const [idNewList, setIdNewList] = useState()
   const [redirList, setRedirList] = useState(false)
-  const { handleSubmit, register, errors } = useForm()
+  const { handleSubmit, register } = useForm()
 
   useEffect(() => {
     getAllLists().then((res) => {
@@ -37,31 +37,31 @@ export default function Lists() {
 
         <div className='tasklist-container'>
           {allLists.length === 0 && (
-            <div className="message-no-lists alert alert-info">You haven't created any list... yet!</div>
+            <div className='message-no-lists alert alert-info'>
+              You haven't created any list... yet!
+            </div>
           )}
           {allLists.length > 0 &&
-            allLists.map((el: any) => <SingleList id={el.id} name={el.name} />)}
+            allLists.map((el: any) => <SingleList key={el.id} id={el.id} name={el.name} />)}
         </div>
         <div className='form-new-list'>
-          <form onSubmit={handleSubmit(newList)}>
-            <h4>Add a list</h4>
-            <form className='form-inline'>
-              <div className='form-group mb-2 mx-2'>
-                <label className='sr-only' htmlFor='listname'>
-                  New list name
-                </label>
-                <input
-                  className='form-control'
-                  type='text'
-                  id='listname'
-                  name='listname'
-                  ref={register}
-                  maxLength={20}
-                  placeholder='New list name'
-                />
-              </div>
-              <button className='btn btn-primary mb-2'>Create list</button>
-            </form>
+          <h4>Add a list</h4>
+          <form className='form-inline' onSubmit={handleSubmit(newList)}>
+            <div className='form-group mb-2 mx-2'>
+              <label className='sr-only' htmlFor='listname'>
+                New list name
+              </label>
+              <input
+                className='form-control'
+                type='text'
+                id='listname'
+                name='listname'
+                ref={register}
+                maxLength={20}
+                placeholder='New list name'
+              />
+            </div>
+            <button className='btn btn-primary mb-2'>Create list</button>
           </form>
         </div>
       </main>
