@@ -11,6 +11,12 @@ export default function useUser () {
       setState({ loading: true, error: false })
       loginUserService({ username, password })
         .then((jwt) => {
+          if (!jwt) {
+            return setState({
+              error: true,
+              loading: false
+            })
+          }
           localStorage.setItem('user', jwt)
           setState({ loading: false, error: false })
           setJwt(jwt)

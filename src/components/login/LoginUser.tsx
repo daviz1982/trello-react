@@ -2,23 +2,25 @@ import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Redirect } from 'react-router-dom'
 import useUser from '../../hooks/useUser'
-import loginUserService from '../../services/loginUser.service'
 
 export default function LoginUser() {
   const { handleSubmit, register, errors } = useForm()
-  const [isSubmitting, setIsSubmitting] = useState(false)
   const [redirect, setRedirect] = useState(false)
   const { isLoginLoading, hasLoginError, login, isLogged } = useUser()
 
   useEffect(() => {
-    setIsSubmitting(false)
     if (isLogged) {
       setRedirect(true)
     }
   }, [isLogged])
 
+  useEffect(() => {
+    if (hasLoginError) {
+      setRedirect(false)
+    }
+  }, [hasLoginError])
+
   const onSubmit = (params: any) => {
-    setIsSubmitting(true)
     login(params)
   }
 
@@ -47,8 +49,9 @@ export default function LoginUser() {
           />
         </div>
         <div>
-          <button disabled={isSubmitting}>Login</button>
+          <button disabled={isLoginLoading}>Login</button>
         </div>
+        {hasLoginError && <div className='error'>Wrong credentials</div>}
       </form>
       <h4>
         Not an user yet? You can register <a href='/register'>here</a>
