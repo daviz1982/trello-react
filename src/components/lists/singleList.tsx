@@ -11,6 +11,7 @@ export default function SingleList({ id, name }: { id: number; name: string }) {
   const [tasksList, setTasksList] = useState([])
   const params = useParams<{ idList: string }>()
   const { handleSubmit, register } = useForm()
+  const [showFormAddTask, setShowFormAddTask] = useState(false)
 
   const [state, setState] = useState(() => {
     if (params.idList) {
@@ -24,7 +25,7 @@ export default function SingleList({ id, name }: { id: number; name: string }) {
     if (!state.name) {
       getList(state.idList).then((list) => {
         if (list.length) {
-          setState({ ...state, name: list[0].name})
+          setState({ ...state, name: list[0].name })
         }
       })
       getAllTasks()
@@ -32,6 +33,7 @@ export default function SingleList({ id, name }: { id: number; name: string }) {
   }, [])
 
   const newTask = (params: any) => {
+    handleFormAddTask()
     const { taskname } = params
     if (taskname === '') return
     addTask({ task: taskname, idlist: state.idList }).then((res) => {
@@ -48,6 +50,10 @@ export default function SingleList({ id, name }: { id: number; name: string }) {
     })
   }
 
+  const handleFormAddTask = () => {
+    setShowFormAddTask(!showFormAddTask)
+  }
+
   return (
     <>
       <div className='tasklist card'>
@@ -62,20 +68,39 @@ export default function SingleList({ id, name }: { id: number; name: string }) {
           )}
         </div>
         <div className='card-footer'>
-          <form onSubmit={handleSubmit(newTask)}>
-            <h5>Add task</h5>
-            <div>
-              <label htmlFor='taskname'>Set a name for the new task</label>
-              <input
-                type='text'
-                id='taskname'
-                name='taskname'
-                ref={register}
-                maxLength={20}
-              />
-              <button>Create task</button>
-            </div>
-          </form>
+          <div className={showFormAddTask ? '' : 'd-none'}>
+            <form onSubmit={handleSubmit(newTask)}>
+              <h5>Add task</h5>
+              <div className='form-group'>
+                <label className='sr-only' htmlFor='taskname'>
+                  Name
+                </label>
+                <input
+                  className='form-control'
+                  type='text'
+                  id='taskname'
+                  name='taskname'
+                  ref={register}
+                  maxLength={20}
+                  placeholder='Name'
+                />
+              </div>
+              <div className='d-flex'>
+                <a
+                  className='align-self-center btn btn-link'
+                  onClick={handleFormAddTask}
+                >
+                  Dismiss
+                </a>
+                <button className='btn btn-success ml-auto'>Create task</button>
+              </div>
+            </form>
+          </div>
+          <div className={showFormAddTask ? 'd-none' : 'text-center'}>
+            <button className='btn btn-primary' onClick={handleFormAddTask}>
+              Add task +
+            </button>
+          </div>
         </div>
       </div>
     </>
