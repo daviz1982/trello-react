@@ -27,35 +27,48 @@ export default function LoginUser() {
   return (
     <>
       {redirect && <Redirect to='/home' />}
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div>
-          <label htmlFor='username'>Username: </label>
-          <input
-            type='text'
-            name='username'
-            id='username'
-            maxLength={20}
-            ref={register}
-          />
+      <div className='container'>
+        <div className='row'>
+          <div className='col-lg-6 offset-lg-3'>
+            <div className='card'>
+              <form className='box' onSubmit={handleSubmit(onSubmit)}>
+                <h2>Login</h2>
+                <p className='text-muted'>
+                  Please enter your login and password!
+                </p>
+                <input
+                  type='text'
+                  name='username'
+                  id='username'
+                  ref={register}
+                  maxLength={20}
+                  placeholder='Username'
+                />
+                <input
+                  type='password'
+                  name='password'
+                  id='password'
+                  ref={register}
+                  maxLength={20}
+                  placeholder='Password'
+                />
+                <a className='forgot text-muted' href='/register'>
+                Not an user yet? Please, register here
+                </a>
+                <input
+                  type='submit'
+                  disabled={isLoginLoading}
+                  name='login'
+                  value='Login'
+                />
+                {hasLoginError && (
+                  <div className='error'>Wrong credentials</div>
+                )}
+              </form>
+            </div>
+          </div>
         </div>
-        <div>
-          <label htmlFor='password'>Password:</label>
-          <input
-            type='password'
-            name='password'
-            id='password'
-            maxLength={20}
-            ref={register}
-          />
-        </div>
-        <div>
-          <button disabled={isLoginLoading}>Login</button>
-        </div>
-        {hasLoginError && <div className='error'>Wrong credentials</div>}
-      </form>
-      <h4>
-        Not an user yet? You can register <a href='/register'>here</a>
-      </h4>
+      </div>
     </>
   )
 }

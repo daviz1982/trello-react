@@ -1,10 +1,10 @@
 import { API_URL } from "../shared/constants";
 
-export default async function addTaskService(params: any) {
+export default async function addTask(params: any) {
   if (!params) {
     return
   }
-  const url = API_URL + '/addTask'
+  const url = API_URL + '/tasks'
   const response = await fetch(url, {
     method: 'POST',
     headers: {

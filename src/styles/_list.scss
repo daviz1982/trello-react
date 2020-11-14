@@ -1,0 +1,28 @@
+.tasklist-container {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: stretch;
+  overflow-x: scroll;
+}
+
+.message-no-lists {
+  align-self: center;
+  text-align: center;
+  width: 100%;
+}
+
+.tasklist {
+  flex: 1 0 20vw;
+  margin: 0 1vw 1vh;
+  min-width: 250px;
+
+  &:first-of-type {
+    margin-left: 0;
+  }
+}
+
+.form-new-list {
+  flex: 0 0 auto;
+  margin-top: 2rem;
+}

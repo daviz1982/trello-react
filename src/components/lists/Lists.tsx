@@ -3,6 +3,7 @@ import { Redirect } from 'react-router-dom'
 import getAllLists from '../../services/allLists.service'
 import { useForm } from 'react-hook-form'
 import createList from '../../services/createList.service'
+import SingleList from './singleList'
 
 export default function Lists() {
   const [allLists, setAllLists] = useState([])
@@ -14,36 +15,56 @@ export default function Lists() {
     getAllLists().then((res) => {
       setAllLists(res)
     })
-  })
+  }, [])
 
   const newList = (params: any) => {
     const { listname } = params
     if (listname === '') return
     createList(listname).then((res) => {
       if (res) {
-      setIdNewList(res.id)
-      setRedirList(true)
+        setIdNewList(res.id)
+        setRedirList(true)
       }
     })
   }
 
   return (
-    <div>
+    <>
       {redirList && <Redirect to={`/list/${idNewList}`} />}
-      {allLists.length === 0 && <h2>You haven't created any list... yet!</h2>}
-      {allLists.length > 0 && allLists.map((el) => (
-        <h1>hola</h1>
-      ))}
-      <div>
-        <form onSubmit={handleSubmit(newList)}>
-          <h4>Add a list</h4>
-          <div>
-            <label htmlFor='listname'>Set a name for the new list</label>
-            <input type='text' id='listname' name='listname' ref={register} maxLength={20} />
-            <button>Create list</button>
-          </div>
-        </form>
-      </div>
-    </div>
+
+      <main>
+        <h2>Your lists</h2>
+
+        <div className='tasklist-container'>
+          {allLists.length === 0 && (
+            <div className="message-no-lists alert alert-info">You haven't created any list... yet!</div>
+          )}
+          {allLists.length > 0 &&
+            allLists.map((el: any) => <SingleList id={el.id} name={el.name} />)}
+        </div>
+        <div className='form-new-list'>
+          <form onSubmit={handleSubmit(newList)}>
+            <h4>Add a list</h4>
+            <form className='form-inline'>
+              <div className='form-group mb-2 mx-2'>
+                <label className='sr-only' htmlFor='listname'>
+                  New list name
+                </label>
+                <input
+                  className='form-control'
+                  type='text'
+                  id='listname'
+                  name='listname'
+                  ref={register}
+                  maxLength={20}
+                  placeholder='New list name'
+                />
+              </div>
+              <button className='btn btn-primary mb-2'>Create list</button>
+            </form>
+          </form>
+        </div>
+      </main>
+    </>
   )
 }
