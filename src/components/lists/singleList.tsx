@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { createRef, useEffect, useState } from 'react'
 import editList from '../../services/editList.service'
 import getList from '../../services/getList.service'
 import ListFooter from './ListFooter'
@@ -6,7 +6,7 @@ import sprite from '../../images/sprite.svg'
 import MyModal from '../mymodal/MyModal'
 import TaskList from '../tasks/TaskList'
 import deleteTasksList from '../../services/deleteAllTasks.service'
-import getTasksList from '../../services/getTasks.service'
+import addTask from '../../services/addTask.service'
 
 export default function SingleList({
   id,
@@ -40,11 +40,11 @@ export default function SingleList({
       })
   }, [reloadList, listId])
 
-  useEffect(()=> {
-    getTasksList(listId).then((tasks) => {
-      setTasksList(tasks)
-    })
-  }, [reloadList, listId, tasksList])
+  const handleTasksList = (tasksList: any) => {
+    setTasksList(tasksList)
+  }
+
+  const listOfTasks: any = createRef();
 
   useEffect(() => {
     if (!showEditName) {
@@ -62,8 +62,7 @@ export default function SingleList({
         setShowModal(true)
         return
       }
-      deleteTasksList(listId)
-      .then(()=>handleDeleteList(listId))
+      deleteTasksList(listId).then(() => handleDeleteList(listId))
       return
     }
     handleDeleteList(listId)
@@ -82,6 +81,19 @@ export default function SingleList({
     setShowModal(false)
     setError('')
   }
+
+  const handleAddTask = ({ newName }: any) => {
+    addTask({ task: newName, idlist: listId })
+      .then((res) => {
+        if (res) {
+          setReloadList(true)
+          listOfTasks.current.forceUpdate()
+        }
+      })
+      .catch((e) => {
+        // console.error('CONTROLLED ERROR: ', e)
+      })
+    }
 
   return (
     <>
@@ -140,10 +152,10 @@ export default function SingleList({
           </div>
         )}
         <div className='card-body list-body'>
-          <TaskList listId={listId} />
+          <TaskList listId={listId} handleTasksList={handleTasksList} reloadList={reloadList} />
         </div>
         <div className='card-footer'>
-          <ListFooter idList={listId} setTasksList={setTasksList} />
+          <ListFooter addTask={handleAddTask} />
         </div>
       </div>
     </>

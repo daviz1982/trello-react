@@ -1,32 +1,18 @@
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import addTask from '../../services/addTask.service'
-import getTasksList from '../../services/getTasks.service'
 
-export default function ListFooter({ idList, setTasksList }: any) {
+export default function ListFooter({ addTask }: any) {
   const { handleSubmit, register } = useForm()
   const [showFormAddTask, setShowFormAddTask] = useState(false)
   const [newName, setNewName] = useState('')
   const handleFormAddTask = () => {
+    setNewName('')
     setShowFormAddTask(!showFormAddTask)
   }
   const newTask = () => {
     setShowFormAddTask(false)
     if (newName === '') return
-
-    addTask({ task: newName, idlist: idList })
-      .then((res) => {
-        if (res) {
-          // getAllTasks()
-          getTasksList(idList).then((tasks) => {
-            setTasksList(tasks)
-          })
-        }
-      })
-      .catch((e) => {
-        // console.error('CONTROLLED ERROR: ', e)
-      })
-    setNewName('')
+    addTask({newName})
   }
 
   return (

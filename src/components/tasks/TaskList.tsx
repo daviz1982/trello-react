@@ -1,23 +1,24 @@
 import React, { useEffect, useState } from 'react'
-import deleteTasksList from '../../services/deleteAllTasks.service'
 import deleteSingleTask from '../../services/deleteSingleTask'
 import editTask from '../../services/editTask'
 import getTasksList from '../../services/getTasks.service'
 import MyModal from '../mymodal/MyModal'
 import Task from './Task'
 
-export default function TaskList({ listId }: any) {
+export default function TaskList({ listId, handleTasksList, reloadList }: any) {
   const [tasksList, setTasksList] = useState([])
   const [showModal, setShowModal] = useState(false)
   const [taskToDelete, setTaskToDelete] = useState(0)
   const [error, setError] = useState('')
   const [reloadTaskList, setReloadTaskList] = useState(false)
+
   useEffect(() => {
     setReloadTaskList(false)
     getTasksList(listId).then((tasks) => {
       setTasksList(tasks)
+      handleTasksList(tasks)
     })
-  }, [reloadTaskList])
+  }, [reloadTaskList, reloadList])
 
   const editTaskHandler = ({
     taskId,
