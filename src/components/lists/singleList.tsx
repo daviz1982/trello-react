@@ -44,7 +44,7 @@ export default function SingleList({
     getTasksList(listId).then((tasks) => {
       setTasksList(tasks)
     })
-  }, [reloadList, listId])
+  }, [reloadList, listId, tasksList])
 
   useEffect(() => {
     if (!showEditName) {

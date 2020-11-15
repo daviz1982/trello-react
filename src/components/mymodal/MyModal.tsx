@@ -28,7 +28,7 @@ export default function MyModal({
           <Button variant='secondary' onClick={handleClose}>
             {textSecondaryButton}
           </Button>
-          <Button variant='primary' onClick={handleAction}>{textPrimaryButton}</Button>
+          <Button variant='danger' onClick={handleAction}>{textPrimaryButton}</Button>
         </Modal.Footer>
       </Modal>
   )

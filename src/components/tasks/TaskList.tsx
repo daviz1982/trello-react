@@ -3,10 +3,14 @@ import deleteTasksList from '../../services/deleteAllTasks.service'
 import deleteSingleTask from '../../services/deleteSingleTask'
 import editTask from '../../services/editTask'
 import getTasksList from '../../services/getTasks.service'
+import MyModal from '../mymodal/MyModal'
 import Task from './Task'
 
 export default function TaskList({ listId }: any) {
   const [tasksList, setTasksList] = useState([])
+  const [showModal, setShowModal] = useState(false)
+  const [taskToDelete, setTaskToDelete] = useState(0)
+  const [error, setError] = useState('')
   const [reloadTaskList, setReloadTaskList] = useState(false)
   useEffect(() => {
     setReloadTaskList(false)
@@ -29,7 +33,20 @@ export default function TaskList({ listId }: any) {
   }
 
   const deleteTaskHandler = (taskId: number) => {
+    setTaskToDelete(taskId)
+    if (!showModal) {
+      setError('Are you sure you want to delete this task?')
+      setShowModal(true)
+      return
+    }
+    setShowModal(false)
+    setError('')
     deleteSingleTask({ taskId }).then(() => setReloadTaskList(true))
+  }
+
+  const closeModal = () => {
+    setShowModal(false)
+    setError('')
   }
 
   return (
@@ -47,6 +64,17 @@ export default function TaskList({ listId }: any) {
               />
             )
           })}
+          {showModal && (
+            <MyModal
+              show={showModal}
+              handleClose={closeModal}
+              handleAction={() => deleteTaskHandler(taskToDelete)}
+              title='Confirm deletion'
+              bodyText={error}
+              textPrimaryButton='Delete'
+              textSecondaryButton='Cancel'
+            />
+          )}
         </>
       )}
     </>
