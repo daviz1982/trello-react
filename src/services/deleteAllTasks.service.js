@@ -15,5 +15,5 @@ export default async function deleteTasksList(idList) {
     if (!res.ok) console.error('Cannot get tasks')
     return res.json()
   })
-  // return response
+  return response
 }

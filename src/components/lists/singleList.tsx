@@ -1,11 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
 import editList from '../../services/editList.service'
 import getList from '../../services/getList.service'
-import getTasksList from '../../services/getTasks.service'
-import Task from '../tasks/Task'
 import ListFooter from './ListFooter'
-import { useForm } from 'react-hook-form'
 import sprite from '../../images/sprite.svg'
 import MyModal from '../mymodal/MyModal'
 import TaskList from '../tasks/TaskList'
@@ -27,7 +23,7 @@ export default function SingleList({
   const [reloadList, setReloadList] = useState(false)
   const [showListOptions, setShowListOptions] = useState(false)
   const [listName, setListName] = useState(name)
-  const [listId, setListId] = useState(id)
+  const [listId] = useState(id)
 
   useEffect(() => {
     setReloadList(false)
