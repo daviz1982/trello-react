@@ -17,6 +17,9 @@ export default async function editList({idList, name}) {
   }).then(res => {
     if (!res.ok) console.error('Cannot get tasks')
     return res.json()
+  }).catch(error => {
+    console.error(`Error in getTasksService: ${error}`)
+    return []
   })
   return response
 }

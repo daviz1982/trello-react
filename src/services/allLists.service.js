@@ -12,6 +12,9 @@ export default async function getAllLists() {
   }).then(res => {
     if (!res.ok) console.error('Cannot get lists')
     return res.json()
+  }).catch(error => {
+    console.error(`Error in getAllListsService: ${error}`)
+    //return []
   })
   return response
 }

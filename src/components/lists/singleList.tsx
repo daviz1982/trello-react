@@ -5,6 +5,8 @@ import ListFooter from './ListFooter'
 import sprite from '../../images/sprite.svg'
 import MyModal from '../mymodal/MyModal'
 import TaskList from '../tasks/TaskList'
+import deleteTasksList from '../../services/deleteAllTasks.service'
+import getTasksList from '../../services/getTasks.service'
 
 export default function SingleList({
   id,
@@ -36,24 +38,33 @@ export default function SingleList({
       .catch((e) => {
         // console.error('CONTROLLED ERROR: ', e)
       })
-  }, [reloadList])
+  }, [reloadList, listId])
 
-  useEffect(()=>{
+  useEffect(()=> {
+    getTasksList(listId).then((tasks) => {
+      setTasksList(tasks)
+    })
+  }, [reloadList, listId])
+
+  useEffect(() => {
     if (!showEditName) {
       setEditListName(listName)
     }
-  }, [showEditName])
+  }, [showEditName, listName])
 
   const delList = () => {
-    if (!showModal) {
-      setShowListOptions(false)
-      if (tasksList.length > 0) {
+    setShowListOptions(false)
+    if (tasksList.length > 0) {
+      if (!showModal) {
         setError(
           `This list has depending tasks. Are you sure you want to delete?`
         )
         setShowModal(true)
         return
       }
+      deleteTasksList(listId)
+      .then(()=>handleDeleteList(listId))
+      return
     }
     handleDeleteList(listId)
     closeModal()
@@ -103,7 +114,10 @@ export default function SingleList({
           )}
           <button
             className='btn btn-secondary ml-auto'
-            onClick={() => {setShowListOptions(!showListOptions); setShowEditName(false)}}
+            onClick={() => {
+              setShowListOptions(!showListOptions)
+              setShowEditName(false)
+            }}
           >
             <svg className='bi' width='16' height='16'>
               <use href={sprite + '#list'} />

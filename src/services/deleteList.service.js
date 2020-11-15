@@ -14,6 +14,9 @@ export default async function deleteList(idList) {
   }).then(res => {
     if (!res.ok) console.error('Cannot get tasks')
     return res.json()
+  }).catch(error => {
+    console.error(`Error in deleteListService: ${error}`)
+    //return []
   })
   // return response
 }

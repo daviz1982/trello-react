@@ -18,7 +18,7 @@ export default function App() {
           <Switch>
             <Route exact path='/login' component={LoginUser} />
             <Route exact path='/register' component={RegisterUser} />
-            <PrivateRoute exact path='/list/:idList' component={SingleList} />
+            <PrivateRoute exact path='/list' component={SingleList} />
             <PrivateRoute exact path={['/', '/home']} component={Home} />
           </Switch>
         </section>
