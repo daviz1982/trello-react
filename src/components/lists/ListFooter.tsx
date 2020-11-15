@@ -1,29 +1,18 @@
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import addTask from '../../services/addTask.service'
-import getTasksList from '../../services/getTasks.service'
 
-export default function ListFooter({ idList, setTasksList }: any) {
+export default function ListFooter({ addTask }: any) {
   const { handleSubmit, register } = useForm()
   const [showFormAddTask, setShowFormAddTask] = useState(false)
+  const [newName, setNewName] = useState('')
   const handleFormAddTask = () => {
+    setNewName('')
     setShowFormAddTask(!showFormAddTask)
   }
-  const newTask = (params: any) => {
-    const { taskname } = params
-    if (taskname === '') return
-    addTask({ task: taskname, idlist: idList })
-      .then((res) => {
-        if (res) {
-          // getAllTasks()
-          getTasksList(idList).then((tasks) => {
-            setTasksList(tasks)
-          })
-        }
-      })
-      .catch((e) => {
-        // console.error('Ola soy un error: ', e)
-      })
+  const newTask = () => {
+    setShowFormAddTask(false)
+    if (newName === '') return
+    addTask({newName})
   }
 
   return (
@@ -43,6 +32,8 @@ export default function ListFooter({ idList, setTasksList }: any) {
               ref={register}
               maxLength={20}
               placeholder='Name'
+              onChange={(e) => setNewName(e.target.value)}
+              value={newName}
             />
           </div>
           <div className='d-flex'>

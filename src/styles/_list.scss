@@ -28,5 +28,13 @@
 }
 
 .list-body {
+  height: 20vh;
+  overflow: auto;
   padding: .5rem;
+}
+
+#error-single-list {
+  bottom: 0;
+  position: fixed;
+  width: 80vw;
 }

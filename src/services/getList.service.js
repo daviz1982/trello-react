@@ -12,6 +12,9 @@ export default async function getList(idList) {
   }).then(res => {
     if (!res.ok) console.error(`Cannot get list with id = ${idList}`)
     return res.json()
+  }).catch(error => {
+    console.error(`Error in getTasksService: ${error}`)
+    return []
   })
   return response
 }

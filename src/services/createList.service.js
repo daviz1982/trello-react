@@ -19,6 +19,9 @@ export default async function createList(listName) {
     if (!res.ok) console.error('Cannot get lists')
     return res.json()
     // return res.json()
+  }).catch(error => {
+    console.error(`Error in createListService: ${error}`)
+    //return []
   })
   return response
 }

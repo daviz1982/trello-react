@@ -6,14 +6,19 @@ export default async function getTasksList(idList) {
   const url = API_URL + '/list/tasks/' + idList
   const jwt = localStorage.getItem('user') || ''
   const response = await fetch(url, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + jwt
-    }
-  }).then(res => {
-    if (!res.ok) console.error('Cannot get tasks')
-    return res.json()
-  })
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${jwt}`
+      }
+    })
+    .then(res => {
+      if (!res.ok) console.error('Cannot get tasks')
+      return res.json()
+    })
+    .catch(error => {
+      console.error(`Error in getTasksService: ${error}`)
+      return []
+    })
   return response
 }
