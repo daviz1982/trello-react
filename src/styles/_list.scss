@@ -4,6 +4,12 @@
   flex-direction: row;
   justify-content: stretch;
   overflow-x: scroll;
+  .smooth-dnd-container.horizontal {
+    height: 100%;
+  }
+  .smooth-dnd-draggable-wrapper {
+    height: 100%;
+  }
 }
 
 .message-no-lists {
@@ -13,10 +19,10 @@
 }
 
 .tasklist {
-  flex: 1 0 20vw;
+  height: 98%;
   margin: 0 1vw 1vh;
   min-width: 250px;
-
+  width: 18vw;
   &:first-of-type {
     margin-left: 0;
   }
@@ -37,4 +43,9 @@
   bottom: 0;
   position: fixed;
   width: 80vw;
+}
+
+.list-drop-preview {
+  border: 2px dashed #363666;
+  margin: 0 1vw 1vh 0;
 }
