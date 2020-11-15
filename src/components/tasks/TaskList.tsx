@@ -2,8 +2,11 @@ import React, { useEffect, useState } from 'react'
 import deleteSingleTask from '../../services/deleteSingleTask'
 import editTask from '../../services/editTask'
 import getTasksList from '../../services/getTasks.service'
+import { applyDrag } from '../../shared/utils'
+import { Container, Draggable } from 'react-smooth-dnd'
 import MyModal from '../mymodal/MyModal'
 import Task from './Task'
+import Context from '../../context/userContext'
 
 export default function TaskList({ listId, handleTasksList, reloadList }: any) {
   const [tasksList, setTasksList] = useState([])
@@ -50,21 +53,39 @@ export default function TaskList({ listId, handleTasksList, reloadList }: any) {
     setError('')
   }
 
+  const onTaskDrop = (dropResult: any) => {
+    let _tasksList: any = Object.assign([], tasksList)
+    _tasksList = applyDrag(_tasksList, dropResult)
+    setTasksList(_tasksList)
+  }
+
   return (
     <>
       {tasksList.length > 0 && (
         <>
-          {tasksList.map((elem: any) => {
-            return (
-              <Task
-                key={elem.id}
-                id={elem.id}
-                name={elem.task}
-                handleEdit={editTaskHandler}
-                handleDelete={deleteTaskHandler}
-              />
-            )
-          })}
+          <Container
+            onDrop={onTaskDrop}
+            getChildPayload={(index)=> tasksList[index]}
+            dragHandleSelector='.task-container'
+            dropPlaceholder={{
+              animationDuration: 200,
+              showOnTop: true,
+              className: 'list-drop-preview',
+            }}
+          >
+            {tasksList.map((elem: any) => {
+              return (
+                <Draggable key={elem.id}>
+                  <Task
+                    id={elem.id}
+                    name={elem.task}
+                    handleEdit={editTaskHandler}
+                    handleDelete={deleteTaskHandler}
+                  />
+                </Draggable>
+              )
+            })}
+          </Container>
           {showModal && (
             <MyModal
               show={showModal}

@@ -5,6 +5,9 @@ import createList from '../../services/createList.service'
 import SingleList from './singleList'
 import deleteList from '../../services/deleteList.service'
 
+import { Container, Draggable } from 'react-smooth-dnd'
+import { applyDrag } from '../../shared/utils'
+
 export default function Lists() {
   const [allLists, setAllLists] = useState([])
   const [reloadList, setReloadList] = useState(false)
@@ -13,12 +16,12 @@ export default function Lists() {
   useEffect(() => {
     setReloadList(false)
     getAllLists().then((res) => {
-      // TODO: sort lists by id - custom order
       setAllLists(res)
     })
   }, [reloadList])
+  
 
-  const newList = (params: any) => {
+  const newList = (params: any, e:any) => {
     const { listname } = params
     if (listname === '') return
     createList(listname).then((res) => {
@@ -26,10 +29,17 @@ export default function Lists() {
         setReloadList(true)
       }
     })
+    e.target.reset()
   }
 
   const delList = (id: string) => {
     deleteList(id).then(() => setReloadList(true))
+  }
+
+  const onColumnDrop = (dropResult: any) => {
+    let _allLists: any = Object.assign([], allLists)
+    _allLists = applyDrag(_allLists, dropResult)
+    setAllLists(_allLists)
   }
 
   return (
@@ -43,15 +53,28 @@ export default function Lists() {
               You haven't created any list... yet!
             </div>
           )}
-          {allLists.length > 0 &&
-            allLists.map((el: any) => (
-              <SingleList
-                key={el.id}
-                id={el.id}
-                name={el.name}
-                handleDeleteList={() => delList(el.id)}
-              />
-            ))}
+          <Container
+            orientation={'horizontal'}
+            onDrop={onColumnDrop}
+            getChildPayload={(index) => allLists[index]}
+            dragHandleSelector='.tasklist'
+            dropPlaceholder={{
+              animationDuration: 200,
+              showOnTop: true,
+              className: 'list-drop-preview',
+            }}
+          >
+            {allLists.length > 0 &&
+              allLists.map((el: any) => (
+                <Draggable key={el.id}>
+                  <SingleList
+                    id={el.id}
+                    name={el.name}
+                    handleDeleteList={() => delList(el.id)}
+                  />
+                </Draggable>
+              ))}
+          </Container>
         </div>
         <div className='form-new-list'>
           <h4>Add a list</h4>
